@@ -92,7 +92,7 @@ class ViewController: UIViewController, UITableViewDelegate {
         let customMomests = [
             Moment(id: UUID(),
                    autorsAvatar: .avatar,
-                   title: "Hiring for my first job!iring for my firiring for my firiring for my firiring for my fir",
+                   title: "Hiring for my first job!",
                    date: Date(),
                    description: "The company 🍎 was looking for a talented Junior iOS🧑‍🤝‍🧑 Developer to join their team. This role required someone who could🔧 contribute to the development📱, maintenance, and enhancement of T-Bank's iOS mobile application 💻. The ideal candidate 🤓🧠 should possess strong knowledge of Swift programming language ⛵, iOS development frameworks 🌆, and experience with version control systems such as Git 🐒.\n\nApplication Process 🚀✈️\nMy journey began with submitting an online application to T-Bank's career portal 🌐. The company received numerous applications from aspiring iOS developers 👨‍💻👩‍💻, but they were particularly impressed by my portfolio, which showcased several iOS projects 📊🖼️ I had developed independently.\n\nAfter initial screening 🔍, I was invited for a video interview with the hiring manager 🎤. During this session, we discussed my background 🧳, skills 💪, and experiences related to iOS development 🌐. My passion for creating intuitive and efficient mobile interfaces 🏠💡 resonated well with the interviewer 👨‍💻.",
                    photos: [
