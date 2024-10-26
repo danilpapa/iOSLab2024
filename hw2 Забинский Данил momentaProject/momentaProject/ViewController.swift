@@ -79,9 +79,11 @@ class ViewController: UIViewController, UITableViewDelegate {
             let navigationControllerToCreateMomentController = UINavigationController(rootViewController: createMomentController)
             self.present(navigationControllerToCreateMomentController, animated: true)
             
-            createMomentController.saveCreatedMomentClosure = { moment in
-                self.moments.append(moment)
-                self.confirmSnapshot(moments: self.moments, animation: true)
+            createMomentController.saveCreatedMomentClosure = { [weak self] moment in
+                guard let self = self else { return }
+                guard var snaphot = tableViewDataSource?.snapshot() else { return }
+                snaphot.appendItems([moment])
+                tableViewDataSource?.apply(snaphot, animatingDifferences: false)
             }
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .add, primaryAction: addMomentAction)
@@ -174,10 +176,13 @@ class ViewController: UIViewController, UITableViewDelegate {
         navigationController?.pushViewController(momentDescriprionViewController, animated: true)
         tableView.deselectRow(at: indexPath, animated: false)
         
-        momentDescriprionViewController.shareCreatedMomentIntoTableView = { createdMoment, index in
-            self.moments.remove(at: index)
-            self.moments.append(createdMoment)
-            self.confirmSnapshot(moments: self.moments, animation: false)
+        momentDescriprionViewController.shareCreatedMomentIntoTableView = { [weak self] createdMoment, index in
+            guard let self = self else { return }
+            guard var snapshot = self.tableViewDataSource?.snapshot() else { return }
+            let momentToDelete = moments[index]
+            snapshot.deleteItems([momentToDelete])
+            snapshot.appendItems([createdMoment])
+            tableViewDataSource?.apply(snapshot, animatingDifferences: false)
             self.navigationController?.popViewController(animated: true)
         }
     }
@@ -186,8 +191,9 @@ class ViewController: UIViewController, UITableViewDelegate {
 // MARK: Extension ViewController to conform MomentDetailVCDelegate
 extension ViewController: MomentDetailVCDelegate {
     func deleteMoment(with moment: Moment) {
-        let updatedMoments = moments.filter { $0.id != moment.id }
-        moments = updatedMoments
-        confirmSnapshot(moments: moments, animation: false)
+        guard var snapshot = tableViewDataSource?.snapshot() else { return }
+        snapshot.deleteItems([moment])
+        moments.removeAll { $0.id == moment.id }
+        tableViewDataSource?.apply(snapshot, animatingDifferences: false)
     }
 }
