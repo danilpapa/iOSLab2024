@@ -169,9 +169,10 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
         let grayViewBottomAnchor = grayView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -spacingFromViewConstant / 2)
         grayViewBottomAnchor.priority = .defaultLow
         grayViewBottomAnchor.isActive = true
-//        let avatarImageLeadingAnchor = avatarImage.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: -avatarImageSizeConstant)
-//        avatarImageLeadingAnchor.priority = .defaultHigh
-//        avatarImageLeadingAnchor.isActive = true
+        
+       let avatarImageLeadingAnchor = avatarImage.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: -avatarImageSizeConstant)
+       avatarImageLeadingAnchor.priority = .defaultHigh
+       avatarImageLeadingAnchor.isActive = true
     }
     
     // MARK: Adding/Removing CollectionView
