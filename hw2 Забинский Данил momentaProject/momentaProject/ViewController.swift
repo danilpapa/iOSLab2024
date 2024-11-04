@@ -179,10 +179,12 @@ class ViewController: UIViewController, UITableViewDelegate {
         momentDescriprionViewController.shareCreatedMomentIntoTableView = { [weak self] createdMoment, index in
             guard let self = self else { return }
             guard var snapshot = self.tableViewDataSource?.snapshot() else { return }
-            let momentToDelete = moments[index]
+            let momentToDelete = self.moments[index]
             snapshot.deleteItems([momentToDelete])
             snapshot.appendItems([createdMoment])
-            tableViewDataSource?.apply(snapshot, animatingDifferences: false)
+            self.tableViewDataSource?.apply(snapshot, animatingDifferences: false)
+            self.moments.remove(at: index)
+            self.moments.append(createdMoment)
             self.navigationController?.popViewController(animated: true)
         }
     }
