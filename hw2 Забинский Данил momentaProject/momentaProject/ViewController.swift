@@ -168,13 +168,18 @@ class ViewController: UIViewController, UITableViewDelegate {
         tableViewDataSource?.apply(snapshot, animatingDifferences: animation)
     }
     
-    // MARK: Did select row at
+   // MARK: Did select row at
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let moment = tableViewDataSource?.itemIdentifier(for: indexPath) else { return }
         guard let indexOfCurrentMoment = moments.firstIndex(of: moment) else { return }
+
+        showMomentDetailController(moment, indexOfCurrentMoment)
+        tableView.deselectRow(at: indexPath, animated: false)
+    }
+    
+    private func showMomentDetailController(_ moment: Moment, _ indexOfCurrentMoment: Int) {
         let momentDescriprionViewController = MomentDetailViewController(with: moment, withIndex: indexOfCurrentMoment, delegate: self)
         navigationController?.pushViewController(momentDescriprionViewController, animated: true)
-        tableView.deselectRow(at: indexPath, animated: false)
         
         momentDescriprionViewController.shareCreatedMomentIntoTableView = { [weak self] createdMoment, index in
             guard let self = self else { return }
