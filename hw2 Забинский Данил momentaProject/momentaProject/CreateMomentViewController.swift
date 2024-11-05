@@ -10,12 +10,14 @@ import PhotosUI
 
 class CreateMomentViewController: UIViewController {
     // MARK: Properties
-    private let screenWidth = UIScreen.main.bounds.width
-    private let screenHeight = UIScreen.main.bounds.height
-    private let maxImages = 4
-    private let lineSpacingConstant: CGFloat = 0
-    private let spacingFromViewConstant: CGFloat = 10
-    private let textFieldHeightConstant: CGFloat = 100
+    private struct Constants {
+        static let screenWidth = UIScreen.main.bounds.width
+        static let screenHeight = UIScreen.main.bounds.height
+        static let maxImages = 4
+        static let lineSpacingConstant: CGFloat = 0
+        static let spacingFromViewConstant: CGFloat = 10
+        static let textFieldHeightConstant: CGFloat = 100
+    }
     
     private lazy var navigationBarView: UIView = {
         let customView = UIView()
@@ -127,7 +129,7 @@ class CreateMomentViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-        
+    
     private lazy var descriptionUITextView: UITextView = {
         let text = UITextView()
         text.isEditable = true
@@ -233,7 +235,7 @@ class CreateMomentViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     // MARK: Private methods
     private func setup() {
         setupConstraints()
@@ -250,10 +252,10 @@ class CreateMomentViewController: UIViewController {
         contentView.addSubview(separatorStackView)
         view.addSubview(scrollView)
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: spacingFromViewConstant),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: spacingFromViewConstant),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -spacingFromViewConstant),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -spacingFromViewConstant),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.spacingFromViewConstant),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.spacingFromViewConstant),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.spacingFromViewConstant),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.spacingFromViewConstant),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
@@ -261,22 +263,22 @@ class CreateMomentViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            firstInputField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: spacingFromViewConstant * 2),
+            firstInputField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.spacingFromViewConstant * 2),
             firstInputField.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
-            secondInputField.topAnchor.constraint(equalTo: firstInputField.bottomAnchor, constant: spacingFromViewConstant * 2),
+            secondInputField.topAnchor.constraint(equalTo: firstInputField.bottomAnchor, constant: Constants.spacingFromViewConstant * 2),
             secondInputField.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
             addPhotosButton.topAnchor.constraint(equalTo: secondInputField.bottomAnchor, constant: 15),
             addPhotosButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
-            separatorStackView.topAnchor.constraint(equalTo: addPhotosButton.bottomAnchor, constant: spacingFromViewConstant  * 3),
+            separatorStackView.topAnchor.constraint(equalTo: addPhotosButton.bottomAnchor, constant: Constants.spacingFromViewConstant  * 3),
             separatorStackView.centerXAnchor.constraint(equalTo: addPhotosButton.centerXAnchor),
             separatorStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            titleUITextView.heightAnchor.constraint(equalToConstant: textFieldHeightConstant / 2),
+            titleUITextView.heightAnchor.constraint(equalToConstant: Constants.textFieldHeightConstant / 2),
             titleUITextView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.8),
-            descriptionUITextView.heightAnchor.constraint(equalToConstant: textFieldHeightConstant),
+            descriptionUITextView.heightAnchor.constraint(equalToConstant: Constants.textFieldHeightConstant),
             descriptionUITextView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.8),
             
             sparkleImage.heightAnchor.constraint(equalTo: navigationBarView.heightAnchor, multiplier: 0.75),
@@ -287,16 +289,17 @@ class CreateMomentViewController: UIViewController {
     // MARK: PHPicker
     private func showPHPicker() {
         let quantityOfMomentPhotos = momentPhotos?.count ?? 0
-        if quantityOfMomentPhotos < maxImages {
+        let maxImagesInMoment = Constants.maxImages
+        if quantityOfMomentPhotos < maxImagesInMoment {
             var configuration = PHPickerConfiguration(photoLibrary: PHPhotoLibrary.shared())
             configuration.filter = .images
-            configuration.selectionLimit = maxImages - quantityOfMomentPhotos
+            configuration.selectionLimit = maxImagesInMoment - quantityOfMomentPhotos
             
             let picker = PHPickerViewController(configuration: configuration)
             picker.delegate = self
             self.present(picker, animated: true)
         } else {
-            let warningAlert = UIAlertController(title: "Too much images!", message: "You can't add more than \(maxImages) images", preferredStyle: .alert)
+            let warningAlert = UIAlertController(title: "Too much images!", message: "You can't add more than \(maxImagesInMoment) images", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Ok", style: .cancel)
             warningAlert.addAction(okAction)
             present(warningAlert, animated: true)
@@ -308,9 +311,9 @@ class CreateMomentViewController: UIViewController {
         guard momentPhotosCollectionView == nil else { return }
         
         let collectionViewLayout = UICollectionViewFlowLayout()
-        collectionViewLayout.minimumLineSpacing = lineSpacingConstant
-        collectionViewLayout.minimumInteritemSpacing = lineSpacingConstant
-        collectionViewLayout.itemSize = .init(width: (screenWidth - lineSpacingConstant) / 2,                                        height: (screenWidth - lineSpacingConstant) / 2)
+        collectionViewLayout.minimumLineSpacing = Constants.lineSpacingConstant
+        collectionViewLayout.minimumInteritemSpacing = Constants.lineSpacingConstant
+        collectionViewLayout.itemSize = .init(width: (Constants.screenWidth - Constants.lineSpacingConstant) / 2,                                        height: (Constants.screenWidth - Constants.lineSpacingConstant) / 2)
         collectionViewLayout.scrollDirection = .vertical
         
         let selectedImagesCollectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
@@ -320,8 +323,8 @@ class CreateMomentViewController: UIViewController {
         selectedImagesCollectionView.translatesAutoresizingMaskIntoConstraints = false
         separatorStackView.addArrangedSubview(selectedImagesCollectionView)
         NSLayoutConstraint.activate([
-            selectedImagesCollectionView.heightAnchor.constraint(equalToConstant: screenWidth),
-            selectedImagesCollectionView.widthAnchor.constraint(equalToConstant: screenWidth)
+            selectedImagesCollectionView.heightAnchor.constraint(equalToConstant: Constants.screenWidth),
+            selectedImagesCollectionView.widthAnchor.constraint(equalToConstant: Constants.screenWidth)
         ])
         momentPhotosCollectionView = selectedImagesCollectionView
     }

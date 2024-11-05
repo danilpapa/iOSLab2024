@@ -10,7 +10,7 @@ import UIKit
 
 struct Moment: Hashable, Identifiable {
     let id: UUID
-    let authorsAvatar: UIImage
+    let autorsAvatar: UIImage
     let title: String
     let date: Date
     let description: String?

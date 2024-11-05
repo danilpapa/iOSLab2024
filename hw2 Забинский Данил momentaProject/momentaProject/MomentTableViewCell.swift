@@ -7,21 +7,28 @@
 
 import UIKit
 
+protocol DidTapOnImageInPhotosCollectionView: AnyObject {
+    func tappedOnImage(_ image: UIImage)
+}
+
 class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
     // MARK: Properties
     private enum CollectionViewSections: Int {
         case main
     }
-    private let screenWidth = UIScreen.main.bounds.width
-    private let screenHeight = UIScreen.main.bounds.height
-    private let collectionViewHeightConstant: CGFloat = 200
-    private let numberOfLinesConstant = 5
-    private let maxImagesInCellConstant = 2
-    private let spacingFromViewConstant: CGFloat = 10
-    private let avatarImageSizeConstant: CGFloat = 50
-    private let separatorSizeConstant: CGFloat = 1
-    private let itemSpacingConstant: CGFloat = 0
     
+    private struct Constants {
+        static let screenWidth = UIScreen.main.bounds.width
+        static let screenHeight = UIScreen.main.bounds.height
+        static let collectionViewHeightConstant: CGFloat = 200
+        static let numberOfLinesConstant = 5
+        static let maxImagesInCellConstant = 2
+        static let spacingFromViewConstant: CGFloat = 10
+        static let avatarImageSizeConstant: CGFloat = 50
+        static let separatorSizeConstant: CGFloat = 1
+        static let itemSpacingConstant: CGFloat = 0
+    }
+
     private lazy var grayView: UIView = {
         let gv = UIView()
         gv.backgroundColor = .systemGray6
@@ -35,11 +42,11 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = avatarImageSizeConstant / 2
-        let heightAnchor = imageView.heightAnchor.constraint(equalToConstant: avatarImageSizeConstant)
+        imageView.layer.cornerRadius = Constants.avatarImageSizeConstant / 2
+        let heightAnchor = imageView.heightAnchor.constraint(equalToConstant: Constants.avatarImageSizeConstant)
         heightAnchor.priority = .defaultHigh
         heightAnchor.isActive = true
-        let widthAnchor = imageView.widthAnchor.constraint(equalToConstant: avatarImageSizeConstant)
+        let widthAnchor = imageView.widthAnchor.constraint(equalToConstant: Constants.avatarImageSizeConstant)
         widthAnchor.priority = .defaultHigh
         widthAnchor.isActive = true
         return imageView
@@ -56,7 +63,7 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 20)
-        label.numberOfLines = numberOfLinesConstant
+        label.numberOfLines = Constants.numberOfLinesConstant
         return label
     }()
     
@@ -83,7 +90,7 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
         let separatorView = UIView()
         separatorView.backgroundColor = .systemGray3
         separatorView.translatesAutoresizingMaskIntoConstraints = false
-        separatorView.heightAnchor.constraint(equalToConstant: separatorSizeConstant).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: Constants.separatorSizeConstant).isActive = true
         return separatorView
     }()
     
@@ -118,6 +125,9 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
     }
     private var momentPhotosCollectionView: UICollectionView?
     private var collectionViewDataSource: UICollectionViewDiffableDataSource<CollectionViewSections, UIImage>?
+//    private weak var tapOnImageDelegate: ProcessintTappinOnImage?
+    private weak var tapOnImageDelegate: DidTapOnImageInPhotosCollectionView?
+    private var momentId: UUID!
     
     // MARK: Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -136,12 +146,20 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
     }
     
     // MARK: Setup with moment
-    func setupWithMoment(moment: Moment) {
+    func setupWithMoment(moment: Moment, delegate: DidTapOnImageInPhotosCollectionView) {
         avatarImage.image = moment.autorsAvatar
         titleLabel.text = moment.title
         descriptionLabel.text = moment.description
         dateLabel.text = dateFormater.string(from: moment.date)
-        momentPhotos = moment.photos?.prefix(maxImagesInCellConstant).map { $0 }
+        momentPhotos = moment.photos?.prefix(Constants.maxImagesInCellConstant).map { $0 }
+        momentId = moment.id
+        tapOnImageDelegate = delegate
+    }
+    
+    // MARK: Tapping on UICollectionView Image
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let currentImage = collectionViewDataSource?.itemIdentifier(for: indexPath) else { return }
+        self.tapOnImageDelegate?.tappedOnImage(currentImage)
     }
     
     // MARK: Private methods
@@ -154,25 +172,25 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
         grayView.addSubview(avatarImage)
         contentView.addSubview(grayView)
         NSLayoutConstraint.activate([
-            grayView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: spacingFromViewConstant / 2),
-            grayView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: spacingFromViewConstant),
-            grayView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -spacingFromViewConstant / 2),
+            grayView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.spacingFromViewConstant / 2),
+            grayView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.spacingFromViewConstant),
+            grayView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.spacingFromViewConstant / 2),
             
-            dataStackView.topAnchor.constraint(equalTo: grayView.topAnchor, constant: spacingFromViewConstant / 2),
-            dataStackView.bottomAnchor.constraint(equalTo: grayView.bottomAnchor, constant: -spacingFromViewConstant / 2),
-            dataStackView.leadingAnchor.constraint(equalTo: grayView.leadingAnchor, constant: spacingFromViewConstant),
-            dataStackView.trailingAnchor.constraint(equalTo: grayView.trailingAnchor, constant: -spacingFromViewConstant),
+            dataStackView.topAnchor.constraint(equalTo: grayView.topAnchor, constant: Constants.spacingFromViewConstant / 2),
+            dataStackView.bottomAnchor.constraint(equalTo: grayView.bottomAnchor, constant: -Constants.spacingFromViewConstant / 2),
+            dataStackView.leadingAnchor.constraint(equalTo: grayView.leadingAnchor, constant: Constants.spacingFromViewConstant),
+            dataStackView.trailingAnchor.constraint(equalTo: grayView.trailingAnchor, constant: -Constants.spacingFromViewConstant),
             
-            avatarImage.trailingAnchor.constraint(equalTo: grayView.trailingAnchor, constant: -spacingFromViewConstant / 2),
+            avatarImage.trailingAnchor.constraint(equalTo: grayView.trailingAnchor, constant: -Constants.spacingFromViewConstant / 2),
             avatarImage.centerYAnchor.constraint(equalTo: titleAndDateStack.centerYAnchor),
         ])
-        let grayViewBottomAnchor = grayView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -spacingFromViewConstant / 2)
+        let grayViewBottomAnchor = grayView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.spacingFromViewConstant / 2)
         grayViewBottomAnchor.priority = .defaultLow
         grayViewBottomAnchor.isActive = true
         
-       let avatarImageLeadingAnchor = avatarImage.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: -avatarImageSizeConstant)
-       avatarImageLeadingAnchor.priority = .defaultHigh
-       avatarImageLeadingAnchor.isActive = true
+        let avatarImageLeadingAnchor = avatarImage.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: -Constants.avatarImageSizeConstant)
+        avatarImageLeadingAnchor.priority = .defaultHigh
+        avatarImageLeadingAnchor.isActive = true
     }
     
     // MARK: Adding/Removing CollectionView
@@ -181,8 +199,8 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = itemSpacingConstant
-        layout.itemSize = CGSize(width: min(screenWidth, screenHeight) * 0.47, height: min(screenWidth, screenHeight) * 2)
+        layout.minimumLineSpacing = Constants.itemSpacingConstant
+        layout.itemSize = CGSize(width: min(Constants.screenWidth, Constants.screenHeight) * 0.47, height: min(Constants.screenWidth, Constants.screenHeight) * 2)
         let momentCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         momentCollectionView.translatesAutoresizingMaskIntoConstraints = false
         momentCollectionView.delegate = self
@@ -192,7 +210,7 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
         dataStackView.addArrangedSubview(momentCollectionView)
         setupCollectionViewDataSource(for: momentCollectionView, with: photos)
         NSLayoutConstraint.activate([
-            momentCollectionView.heightAnchor.constraint(equalToConstant: collectionViewHeightConstant)
+            momentCollectionView.heightAnchor.constraint(equalToConstant: Constants.collectionViewHeightConstant)
         ])
         momentPhotosCollectionView = momentCollectionView
     }

@@ -9,7 +9,9 @@ import UIKit
 
 class PhotosCollectionViewCell: UICollectionViewCell {
     // MARK: Properties
-    private var buttonSizeConstant: CGFloat = 25
+    private struct Constants {
+        static let buttonSizeConstant: CGFloat = 25
+    }
     
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
@@ -26,7 +28,7 @@ class PhotosCollectionViewCell: UICollectionViewCell {
         let button = UIButton(configuration: .filled(), primaryAction: deleteImageAction)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "minus.circle.fill")!, for: .normal)
-        button.layer.cornerRadius = buttonSizeConstant / 2
+        button.layer.cornerRadius = Constants.buttonSizeConstant / 2
         button.layer.masksToBounds = true
         button.tintColor = .red
         return button
@@ -64,8 +66,8 @@ class PhotosCollectionViewCell: UICollectionViewCell {
             
             deleteButton.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
             deleteButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
-            deleteButton.widthAnchor.constraint(equalToConstant: buttonSizeConstant),
-            deleteButton.heightAnchor.constraint(equalToConstant: buttonSizeConstant),
+            deleteButton.widthAnchor.constraint(equalToConstant: Constants.buttonSizeConstant),
+            deleteButton.heightAnchor.constraint(equalToConstant: Constants.buttonSizeConstant),
         ])
     }
 }

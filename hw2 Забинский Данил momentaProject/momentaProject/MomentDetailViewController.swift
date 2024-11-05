@@ -16,12 +16,14 @@ class MomentDetailViewController: UIViewController {
     private enum CollectionViewSections: Int {
         case main
     }
-    private let lineSpacingConstant: CGFloat = 0
-    private let spacingFromViewConstant: CGFloat = 10
-    private let buttonSizeConstant: CGFloat = 60
-    private let separatorSizeConstant: CGFloat = 1
-    private let screenHeight = UIScreen.main.bounds.height
-    private let screenWidth = UIScreen.main.bounds.width
+    private struct Constants {
+        static let lineSpacingConstant: CGFloat = 0
+        static let spacingFromViewConstant: CGFloat = 10
+        static let buttonSizeConstant: CGFloat = 60
+        static let separatorSizeConstant: CGFloat = 1
+        static let screenHeight = UIScreen.main.bounds.height
+        static let screenWidth = UIScreen.main.bounds.width
+    }
     
     private lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
@@ -130,8 +132,8 @@ class MomentDetailViewController: UIViewController {
     private lazy var momentPhotosCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
-        flowLayout.minimumLineSpacing = lineSpacingConstant
-        flowLayout.minimumInteritemSpacing = lineSpacingConstant
+        flowLayout.minimumLineSpacing = Constants.lineSpacingConstant
+        flowLayout.minimumInteritemSpacing = Constants.lineSpacingConstant
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.delegate = self
         collectionView.layer.cornerRadius = 10
@@ -198,10 +200,10 @@ class MomentDetailViewController: UIViewController {
         scrollView.addSubview(contentView)
         view.addSubview(scrollView)
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: spacingFromViewConstant),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: spacingFromViewConstant),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -spacingFromViewConstant),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -spacingFromViewConstant),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.spacingFromViewConstant),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.spacingFromViewConstant),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.spacingFromViewConstant),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.spacingFromViewConstant),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
@@ -209,21 +211,21 @@ class MomentDetailViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            dataStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: spacingFromViewConstant),
-            dataStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -spacingFromViewConstant),
-            dataStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: spacingFromViewConstant),
-            dataStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -spacingFromViewConstant),
+            dataStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.spacingFromViewConstant),
+            dataStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.spacingFromViewConstant),
+            dataStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.spacingFromViewConstant),
+            dataStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.spacingFromViewConstant),
             
             deleteButton.topAnchor.constraint(equalTo: contentView.topAnchor),
-            deleteButton.heightAnchor.constraint(equalToConstant: buttonSizeConstant),
+            deleteButton.heightAnchor.constraint(equalToConstant: Constants.buttonSizeConstant),
             deleteButton.widthAnchor.constraint(equalTo: deleteButton.heightAnchor),
             
-            avatarImage.heightAnchor.constraint(equalToConstant: buttonSizeConstant),
+            avatarImage.heightAnchor.constraint(equalToConstant: Constants.buttonSizeConstant),
             avatarImage.widthAnchor.constraint(equalTo: avatarImage.heightAnchor),
             
-            separatorView.heightAnchor.constraint(equalToConstant: separatorSizeConstant),
+            separatorView.heightAnchor.constraint(equalToConstant: Constants.separatorSizeConstant),
         ])
-        let deleteButtonLeadingAnchor = deleteButton.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -buttonSizeConstant)
+        let deleteButtonLeadingAnchor = deleteButton.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.buttonSizeConstant)
         deleteButtonLeadingAnchor.priority = .defaultHigh
         deleteButtonLeadingAnchor.isActive = true
     }
@@ -270,11 +272,11 @@ class MomentDetailViewController: UIViewController {
             ])
         case 1, 2:
             NSLayoutConstraint.activate([
-                momentPhotosCollectionView.heightAnchor.constraint(equalToConstant: screenHeight / 3)
+                momentPhotosCollectionView.heightAnchor.constraint(equalToConstant: Constants.screenHeight / 3)
             ])
         default:
             NSLayoutConstraint.activate([
-                momentPhotosCollectionView.heightAnchor.constraint(equalToConstant: screenHeight / 2)
+                momentPhotosCollectionView.heightAnchor.constraint(equalToConstant: Constants.screenHeight / 2)
             ])
         }
     }

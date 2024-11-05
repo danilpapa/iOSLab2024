@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF649DC72CD94ABE0036B4F6 /* MomentPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF649DC62CD94ABE0036B4F6 /* MomentPhotoViewController.swift */; };
 		CFCDE2A52CC8EC26006D77E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCDE2962CC8EC26006D77E9 /* AppDelegate.swift */; };
 		CFCDE2A62CC8EC26006D77E9 /* CreateMomentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCDE2982CC8EC26006D77E9 /* CreateMomentViewController.swift */; };
 		CFCDE2A72CC8EC26006D77E9 /* Moment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCDE29C2CC8EC26006D77E9 /* Moment.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CF649DC62CD94ABE0036B4F6 /* MomentPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentPhotoViewController.swift; sourceTree = "<group>"; };
 		CF7717482CBFEF3E004AAF55 /* momentaProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = momentaProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFCDE2962CC8EC26006D77E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CFCDE2972CC8EC26006D77E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -67,17 +69,18 @@
 			isa = PBXGroup;
 			children = (
 				CFCDE2962CC8EC26006D77E9 /* AppDelegate.swift */,
+				CFCDE2A12CC8EC26006D77E9 /* SceneDelegate.swift */,
+				CFCDE2A22CC8EC26006D77E9 /* ViewController.swift */,
+				CFCDE29F2CC8EC26006D77E9 /* MomentTableViewCell.swift */,
+				CF649DC62CD94ABE0036B4F6 /* MomentPhotoViewController.swift */,
+				CFCDE29E2CC8EC26006D77E9 /* MomentDetailViewController.swift */,
 				CFCDE2982CC8EC26006D77E9 /* CreateMomentViewController.swift */,
+				CFCDE29C2CC8EC26006D77E9 /* Moment.swift */,
+				CFCDE2A02CC8EC26006D77E9 /* PhotosCollectionViewCell.swift */,
 				CFCDE2972CC8EC26006D77E9 /* Assets.xcassets */,
 				CFCDE2992CC8EC26006D77E9 /* Info.plist */,
 				CFCDE29B2CC8EC26006D77E9 /* LaunchScreen.storyboard */,
-				CFCDE29C2CC8EC26006D77E9 /* Moment.swift */,
 				CFCDE29D2CC8EC26006D77E9 /* momentaProject.xcdatamodeld */,
-				CFCDE29E2CC8EC26006D77E9 /* MomentDetailViewController.swift */,
-				CFCDE29F2CC8EC26006D77E9 /* MomentTableViewCell.swift */,
-				CFCDE2A02CC8EC26006D77E9 /* PhotosCollectionViewCell.swift */,
-				CFCDE2A12CC8EC26006D77E9 /* SceneDelegate.swift */,
-				CFCDE2A22CC8EC26006D77E9 /* ViewController.swift */,
 			);
 			path = momentaProject;
 			sourceTree = "<group>";
@@ -160,6 +163,7 @@
 				CFCDE2A72CC8EC26006D77E9 /* Moment.swift in Sources */,
 				CFCDE2A82CC8EC26006D77E9 /* momentaProject.xcdatamodeld in Sources */,
 				CFCDE2A92CC8EC26006D77E9 /* MomentDetailViewController.swift in Sources */,
+				CF649DC72CD94ABE0036B4F6 /* MomentPhotoViewController.swift in Sources */,
 				CFCDE2AA2CC8EC26006D77E9 /* MomentTableViewCell.swift in Sources */,
 				CFCDE2AB2CC8EC26006D77E9 /* PhotosCollectionViewCell.swift in Sources */,
 				CFCDE2AC2CC8EC26006D77E9 /* SceneDelegate.swift in Sources */,

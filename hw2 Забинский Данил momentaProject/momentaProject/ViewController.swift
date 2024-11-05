@@ -12,7 +12,7 @@ class ViewController: UIViewController, UITableViewDelegate {
     private enum TableSections: Int {
         case main
     }
-    
+
     private lazy var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +40,7 @@ class ViewController: UIViewController, UITableViewDelegate {
             ])
         }
     }()
-    
+
     private var moments: [Moment] = []
     private var tableViewDataSource: UITableViewDiffableDataSource<TableSections, Moment>?
     
@@ -80,7 +80,7 @@ class ViewController: UIViewController, UITableViewDelegate {
             self.present(navigationControllerToCreateMomentController, animated: true)
             
             createMomentController.saveCreatedMomentClosure = { [weak self] moment in
-                guard let self = self else { return }
+                guard let self else { return }
                 guard var snaphot = tableViewDataSource?.snapshot() else { return }
                 snaphot.appendItems([moment])
                 tableViewDataSource?.apply(snaphot, animatingDifferences: false)
@@ -154,7 +154,7 @@ class ViewController: UIViewController, UITableViewDelegate {
         tableViewDataSource = UITableViewDiffableDataSource(tableView: tableView,
         cellProvider: { tableView, indexPath, moment in
             let cell = tableView.dequeueReusableCell(withIdentifier: MomentTableViewCell.identifier, for: indexPath) as! MomentTableViewCell
-            cell.setupWithMoment(moment: moment)
+            cell.setupWithMoment(moment: moment, delegate: self)
             cell.selectionStyle = .none
             return cell
         })
@@ -168,7 +168,7 @@ class ViewController: UIViewController, UITableViewDelegate {
         tableViewDataSource?.apply(snapshot, animatingDifferences: animation)
     }
     
-   // MARK: Did select row at
+    // MARK: Did select row at
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let moment = tableViewDataSource?.itemIdentifier(for: indexPath) else { return }
         guard let indexOfCurrentMoment = moments.firstIndex(of: moment) else { return }
@@ -204,3 +204,14 @@ extension ViewController: MomentDetailVCDelegate {
         tableViewDataSource?.apply(snapshot, animatingDifferences: false)
     }
 }
+
+// MARK: Extension ViewController to conform DidTapOnImageInPhotosCollectionView
+extension ViewController: DidTapOnImageInPhotosCollectionView {
+    func tappedOnImage(_ image: UIImage) {
+        let momentImageViewController = MomentPhotoViewController(withImage: image)
+        momentImageViewController.modalTransitionStyle = .crossDissolve
+        self.present(momentImageViewController, animated: true)
+    }
+}
+
+
