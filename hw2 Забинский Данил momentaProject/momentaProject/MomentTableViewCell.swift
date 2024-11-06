@@ -125,7 +125,6 @@ class MomentTableViewCell: UITableViewCell, UICollectionViewDelegate {
     }
     private var momentPhotosCollectionView: UICollectionView?
     private var collectionViewDataSource: UICollectionViewDiffableDataSource<CollectionViewSections, UIImage>?
-//    private weak var tapOnImageDelegate: ProcessintTappinOnImage?
     private weak var tapOnImageDelegate: DidTapOnImageInPhotosCollectionView?
     private var momentId: UUID!
     

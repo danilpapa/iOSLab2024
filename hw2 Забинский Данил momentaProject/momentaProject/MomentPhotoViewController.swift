@@ -54,17 +54,15 @@ class MomentPhotoViewController: UIViewController {
     }
     
     private func setupLayout() {
-//        view.backgroundColor = .white
         closeImageButton.addSubview(controllerImage)
         view.addSubview(closeImageButton)
         NSLayoutConstraint.activate([
             controllerImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             controllerImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            closeImageButton.heightAnchor.constraint(equalToConstant: Constants.screenHeight),
-            closeImageButton.widthAnchor.constraint(equalToConstant: Constants.screenWidth),
+            closeImageButton.heightAnchor.constraint(equalToConstant: max(Constants.screenHeight, Constants.screenWidth)),
+            closeImageButton.widthAnchor.constraint(equalToConstant: max(Constants.screenWidth, Constants.screenHeight)),
             
-                                                     
             controllerImage.heightAnchor.constraint(equalToConstant: min(Constants.screenWidth, Constants.screenHeight) * 0.9),
             controllerImage.widthAnchor.constraint(equalTo: controllerImage.heightAnchor),
         ])
