@@ -83,6 +83,7 @@ class ViewController: UIViewController, UITableViewDelegate {
                 guard let self else { return }
                 guard var snaphot = tableViewDataSource?.snapshot() else { return }
                 snaphot.appendItems([moment])
+                moments.append(moment)
                 tableViewDataSource?.apply(snaphot, animatingDifferences: false)
             }
         }
