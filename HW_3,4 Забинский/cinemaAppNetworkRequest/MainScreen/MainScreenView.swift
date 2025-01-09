@@ -134,6 +134,10 @@ class MainScreenView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setDelegateToPopularFilmsCollecitonView(popularFilmsCollectionViewDelegate: PopularFilmsDelegate) {
+        popularFilmsCollectionView.delegate = popularFilmsCollectionViewDelegate
+    }
+    
     func setDelegateToFilmsCollecitonView(filmsCollectionViewDelegate: FilmsCollectionViewDelegate) {
         filmsCollectionView.delegate = filmsCollectionViewDelegate
     }

@@ -13,26 +13,26 @@ protocol DidTapOnFilmDelegate: AnyObject {
 }
 
 class FilmsCollectionViewDelegate: NSObject, UICollectionViewDelegate {
-    private var dataSource: CollectionViewDiffableDataSource?
     private weak var delegate: DidTapOnFilmDelegate?
     
-    init(dataSource: CollectionViewDiffableDataSource, didTapOnFilmDelegate: DidTapOnFilmDelegate) {
-        self.dataSource = dataSource
+    init(didTapOnFilmDelegate: DidTapOnFilmDelegate) {
         self.delegate = didTapOnFilmDelegate
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
         
-        UIView.animate(withDuration: 0.125, animations: {
-            cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-        }) { isFinished in
-            if isFinished {
-                UIView.animate(withDuration: 0.125) {
-                    cell.transform = .identity
-                } completion: { _ in
-                    if let filmId = self.dataSource?.getItem(at: indexPath)?.id {
-                        self.delegate?.didTapOnFilm(withId: filmId)
+        if let dataSource = collectionView.dataSource as? UICollectionViewDiffableDataSource<CollectionViewSections, Film> {
+            UIView.animate(withDuration: 0.125, animations: {
+                cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+            }) { isFinished in
+                if isFinished {
+                    UIView.animate(withDuration: 0.125) {
+                        cell.transform = .identity
+                    } completion: { _ in
+                        if let filmId = dataSource.itemIdentifier(for: indexPath)?.id {
+                            self.delegate?.didTapOnFilm(withId: filmId)
+                        }
                     }
                 }
             }

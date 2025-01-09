@@ -12,8 +12,15 @@ class MainScreenController: UIViewController {
         view as! MainScreenView
     }
     private let dataManager = MainScreenDataManager()
-    private var popularFilmsCollectionViewDataSource: CollectionViewDiffableDataSource = CollectionViewDiffableDataSource()
-    private var filmsCollectionViewDataSource: CollectionViewDiffableDataSource = CollectionViewDiffableDataSource()
+    private lazy var popularFilmsCollectionViewDataSource: CollectionViewDiffableDataSource = {
+        CollectionViewDiffableDataSource()
+    }()
+    private lazy var popularFilmsCollectionViewDelegate: PopularFilmsDelegate = {
+        PopularFilmsDelegate(delegate: self)
+    }()
+    private lazy var filmsCollectionViewDataSource: CollectionViewDiffableDataSource = {
+        CollectionViewDiffableDataSource()
+    }()
     private var filmsCollectionViewDelegate: FilmsCollectionViewDelegate?
     private var selectedCity: City?
     private var cities: [City] = []
@@ -54,11 +61,11 @@ class MainScreenController: UIViewController {
             downloadedFilms = await downloadedFilmsTask
             
             customView.setDataSourceForCityCollectionView(dataSourceForCityCollectionView: self)
-            
+            customView.setDelegateToPopularFilmsCollecitonView(popularFilmsCollectionViewDelegate: popularFilmsCollectionViewDelegate)
             popularFilmsCollectionViewDataSource.setupPopulafFilmsCollectionView(with: customView.getPopularFilmsCollectionView(), films: popularFilms, didLoadData: dataManager.didLoadData())
             
             filmsCollectionViewDataSource.setupFilmsCollectionView(with: customView.getFilmsCollectionView(), films: downloadedFilms)
-            filmsCollectionViewDelegate = FilmsCollectionViewDelegate(dataSource: filmsCollectionViewDataSource, didTapOnFilmDelegate: self)
+            filmsCollectionViewDelegate = FilmsCollectionViewDelegate(didTapOnFilmDelegate: self)
 
             customView.setDelegateToFilmsCollecitonView(filmsCollectionViewDelegate: filmsCollectionViewDelegate!)
             dataManager.updateValueAfterSaving()
@@ -134,6 +141,21 @@ extension MainScreenController: SearchFilmDelegate {
             self.present(customView.getWrongTitleAlert(), animated: true)
         }
         customView.dismissKeyboard()
+    }
+}
+
+extension MainScreenController: DidTapOnPopularFilmDelegate {
+    func didTapOnFilm(film: Film) {
+        Task {
+            if let filmWithInfo = await dataManager.getDetailAboutFilm(film.id) {
+                let filmDetailScreen = FilmDetailController(withFilm: filmWithInfo)
+                let filmDetailScreenNavigationController = UINavigationController(rootViewController: filmDetailScreen)
+                filmDetailScreenNavigationController.modalPresentationStyle = .custom
+                filmDetailScreenNavigationController.transitioningDelegate = self
+                filmDetailScreenNavigationController.navigationBar.barTintColor = Colors.mainGray
+                self.present(filmDetailScreenNavigationController, animated: true)
+            }
+        }
     }
 }
 

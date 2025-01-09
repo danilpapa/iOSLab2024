@@ -73,6 +73,7 @@
 		CFBC36DB2D2B0F8000A256CD /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBC36DA2D2B0F8000A256CD /* Animations.swift */; };
 		CFBC36DD2D2C2CDA00A256CD /* FilmImagesCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBC36DC2D2C2CDA00A256CD /* FilmImagesCollectionViewDelegate.swift */; };
 		CFBC36E62D2C371E00A256CD /* FilmPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBC36E52D2C371E00A256CD /* FilmPageViewController.swift */; };
+		CFC7CD6B2D3039C20040CDE5 /* PopularFilmsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC7CD6A2D3039C20040CDE5 /* PopularFilmsDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -144,6 +145,7 @@
 		CFBC36DA2D2B0F8000A256CD /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		CFBC36DC2D2C2CDA00A256CD /* FilmImagesCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmImagesCollectionViewDelegate.swift; sourceTree = "<group>"; };
 		CFBC36E52D2C371E00A256CD /* FilmPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmPageViewController.swift; sourceTree = "<group>"; };
+		CFC7CD6A2D3039C20040CDE5 /* PopularFilmsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularFilmsDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,6 +242,7 @@
 		CF462C142D1AC3AA0017F542 /* CollectionViewData */ = {
 			isa = PBXGroup;
 			children = (
+				CFC7CD692D3039A60040CDE5 /* PopularFilmsCollectionView */,
 				CF462CB52D1E94100017F542 /* CityCollectionView */,
 				CF462CB42D1E93F70017F542 /* FilmCollectionView */,
 			);
@@ -431,6 +434,14 @@
 			path = PageViewController;
 			sourceTree = "<group>";
 		};
+		CFC7CD692D3039A60040CDE5 /* PopularFilmsCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				CFC7CD6A2D3039C20040CDE5 /* PopularFilmsDelegate.swift */,
+			);
+			path = PopularFilmsCollectionView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -529,6 +540,7 @@
 				CF462CB22D1DF3660017F542 /* FilmDetailController.swift in Sources */,
 				CF462CA92D1DC8110017F542 /* FilmDTO.swift in Sources */,
 				CF462C0A2D1ABBC00017F542 /* ImageService.swift in Sources */,
+				CFC7CD6B2D3039C20040CDE5 /* PopularFilmsDelegate.swift in Sources */,
 				CF462BFD2D1AB61C0017F542 /* AppDelegate.swift in Sources */,
 				CF462C1C2D1B16B30017F542 /* Colors.swift in Sources */,
 				CF462CBF2D1EEE9E0017F542 /* FilmInfoView.swift in Sources */,

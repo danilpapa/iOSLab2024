@@ -48,11 +48,6 @@ class FilmDetailController: UIViewController {
         customView.updateLayout()
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        customView.updateLayout()
-    }
-    
     init(withFilm film: FilmWithInfo) {
         super.init(nibName: nil, bundle: nil)
         self.film = film
