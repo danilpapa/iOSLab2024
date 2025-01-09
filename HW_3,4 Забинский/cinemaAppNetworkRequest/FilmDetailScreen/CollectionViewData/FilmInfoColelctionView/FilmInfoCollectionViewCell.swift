@@ -28,7 +28,7 @@ class FilmInfoCollectionViewCell: UICollectionViewCell {
     func setupWithTitle(title: String, isHighlighted: Bool) {
         label.text = title
         if isHighlighted {
-            label.textColor = .white
+            label.textColor = .systemGray6
         } else {
             label.textColor = Colors.lighterGray
         }

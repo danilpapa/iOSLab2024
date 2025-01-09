@@ -32,7 +32,7 @@ extension TransitionAnimator: UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: any UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
         
-        switch self.transitionMode {
+        switch transitionMode {
         case .present:
             guard let presentedView = transitionContext.view(forKey: .to) else {
                 transitionContext.completeTransition(false)

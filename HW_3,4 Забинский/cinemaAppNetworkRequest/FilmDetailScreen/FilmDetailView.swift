@@ -18,8 +18,9 @@ class FilmDetailView: UIView {
     private let dataSource = ["О фильме", "Актеры"]
     private var currentFilm: FilmWithInfo!
     private var selectedIndex = 0
-    private let underlineWidth = UIScreen.main.bounds.width / 2 - Constants.tiny * 2
+    private var underlineWidth = UIScreen.main.bounds.width / 2 - Constants.tiny
     private var underlineLeadingConstraint: NSLayoutConstraint!
+    private var underlineWidthConstraint: NSLayoutConstraint!
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -40,7 +41,6 @@ class FilmDetailView: UIView {
     private lazy var filmImagesCollectionView: UICollectionView = {
         let collectionViewLayout = UICollectionViewFlowLayout()
         collectionViewLayout.scrollDirection = .horizontal
-        collectionViewLayout.itemSize = .init(width: min(UIScreen.main.bounds.width, UIScreen.main.bounds.height), height: min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 1.8)
         collectionViewLayout.minimumLineSpacing = 0
         collectionViewLayout.sectionInset = .zero
         
@@ -52,7 +52,6 @@ class FilmDetailView: UIView {
         collectionView.register(FilmImageCollectionViewCell.self, forCellWithReuseIdentifier: FilmImageCollectionViewCell.identifier)
         return collectionView
     }()
-    
     
     private lazy var filmAvatarImage: UIImageView = {
         let image = UIImageView()
@@ -114,7 +113,6 @@ class FilmDetailView: UIView {
     private lazy var infoAndStarsCollectionView: UICollectionView = {
         let collectionViewLayout = UICollectionViewFlowLayout()
         collectionViewLayout.scrollDirection = .horizontal
-        collectionViewLayout.itemSize = .init(width: UIScreen.main.bounds.width / 2 - Constants.tiny, height: Constants.little)
         collectionViewLayout.minimumLineSpacing = 0
         collectionViewLayout.sectionInset = .zero
         
@@ -131,10 +129,9 @@ class FilmDetailView: UIView {
     private lazy var underlineView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray
-        view.layer.cornerRadius = 3.5 / 2
-        view.heightAnchor.constraint(equalToConstant: 3.5).isActive = true
-        view.widthAnchor.constraint(equalToConstant: underlineWidth).isActive = true
+        view.backgroundColor = .systemGray6
+        view.layer.cornerRadius = 3 / 2
+        view.heightAnchor.constraint(equalToConstant: 3).isActive = true
         view.setContentHuggingPriority(.required, for: .horizontal)
         return view
     }()
@@ -167,6 +164,26 @@ class FilmDetailView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func updateLayout() {
+        /// Set / Update filmImagesCollectionView collectionViewLayout.itemSize
+        if let layout = filmImagesCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            let itemWidth = self.bounds.width - safeAreaInsets.left - safeAreaInsets.right
+            layout.itemSize = .init(width: itemWidth, height: itemWidth / 1.8)
+            layout.invalidateLayout()
+        }
+        /// Set / Update infoAndStarsCollectionView collectionViewLayout.itemSize
+        if let layout = infoAndStarsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            let itemWidth = (self.bounds.width - safeAreaInsets.left - safeAreaInsets.right) / 2 - Constants.tiny
+            layout.itemSize = .init(width: itemWidth, height: Constants.little)
+            underlineWidthConstraint.constant = itemWidth
+            layout.invalidateLayout()
+        }
+        /// При выделении поля "Актеры" и дальнейшем перевороте underlineView.leadingAnchor будет не на своем месте => перепроверяем
+        if selectedIndex == 1 {
+            underlineLeadingConstraint.constant = (self.bounds.width - safeAreaInsets.right - safeAreaInsets.left) / 2
+        }
     }
     
     func setUpWithFilm(_ film: FilmWithInfo) {
@@ -274,8 +291,12 @@ class FilmDetailView: UIView {
             underlineView.topAnchor.constraint(equalTo: infoAndStarsCollectionView.topAnchor, constant: Constants.little),
             filmInfoAndStarsDataStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
         ])
+        
         underlineLeadingConstraint = underlineView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: Constants.tiny)
         underlineLeadingConstraint.isActive = true
+        
+        underlineWidthConstraint = underlineView.widthAnchor.constraint(equalToConstant: underlineWidth)
+        underlineWidthConstraint.isActive = true
     }
     
     private func addPlayerGesture() {
@@ -315,20 +336,34 @@ extension FilmDetailView: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard selectedIndex != indexPath.item else { return }
         selectedIndex = indexPath.item
+        
         var newLeadingConstant: CGFloat = 0
         if selectedIndex == 0 {
             newLeadingConstant = Constants.tiny
         } else {
-            newLeadingConstant = underlineWidth + 2.5 * Constants.tiny
+            newLeadingConstant = (self.bounds.width - safeAreaInsets.right - safeAreaInsets.left) / 2
         }
         
-        UIView.animate(withDuration: 0.5) {
-            self.underlineLeadingConstraint.constant = newLeadingConstant
-            self.layoutIfNeeded()
-        } completion: { _ in
+        UIView.animate(withDuration: 0.1) { [weak self] in
+            /// Сбрасываю выделение чтоб в момент перемещения подчеркивания ничего не было выделено
+            self?.selectedIndex = -1
             collectionView.reloadData()
-            self.updateFilmDescription()
+            self?.underlineView.backgroundColor = Colors.lighterGray
+        } completion: { [weak self] _ in
+            UIView.animate(withDuration: 0.5) {
+                guard let self else { return }
+                self.underlineLeadingConstraint.constant = newLeadingConstant
+                self.layoutIfNeeded()
+            } completion: { [weak self] _ in
+                /// Возвращаю выделенный фрагмент перед reloadData()
+                self?.selectedIndex = indexPath.item
+                /// ReloadData работала быстрее и эффективнее чем reloadItems(at: [indexPath.item == 0 ? IndexPath(row: 0, section: 0) : IndexPath(row: 1, section: 0)])
+                collectionView.reloadData()
+                self?.underlineView.backgroundColor = .systemGray6
+                self?.updateFilmDescription()
+            }
         }
     }
 }

@@ -40,10 +40,19 @@ class FilmsCollectionViewDelegate: NSObject, UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        cell.transform = CGAffineTransform(scaleX: 0, y: 0)
-        
-        UIView.animate(withDuration: 0.33) {
-            cell.transform = .identity
+        cell.alpha = 0
+        let rotationTransform = CGAffineTransform(rotationAngle: .pi / 12)
+        let scaleTransform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        let mixedTransform = rotationTransform.concatenating(scaleTransform)
+        cell.transform = mixedTransform
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+            cell.alpha = 0.75
+            cell.transform = CGAffineTransform(rotationAngle: .pi / -24).concatenating(scaleTransform)
+        } completion: { _ in
+            UIView.animate(withDuration: 0.15, delay: 0, options: .curveLinear) {
+                cell.alpha = 1
+                cell.transform = .identity
+            }
         }
     }
 }

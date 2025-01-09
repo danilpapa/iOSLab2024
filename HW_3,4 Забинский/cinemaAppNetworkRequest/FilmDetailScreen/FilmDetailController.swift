@@ -20,7 +20,7 @@ class FilmDetailController: UIViewController {
     private var trailerLink: String!
     private var openControllerAnimator: UIViewPropertyAnimator?
     private var closeControllerAnimator: UIViewPropertyAnimator?
-    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
     override func loadView() {
         super.loadView()
@@ -41,6 +41,16 @@ class FilmDetailController: UIViewController {
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         openControllerAnimator?.startAnimation()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        customView.updateLayout()
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        customView.updateLayout()
     }
     
     init(withFilm film: FilmWithInfo) {

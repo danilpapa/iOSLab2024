@@ -127,10 +127,10 @@ class FilmImageSlideView: UIView {
             image.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             image.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
-            forvardButton.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -Constants.tiny),
+            forvardButton.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.tiny),
             forvardButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
-            backwardButton.leadingAnchor.constraint(equalTo: image.leadingAnchor, constant: Constants.tiny),
+            backwardButton.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: Constants.tiny),
             backwardButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
             upperDismissButton.topAnchor.constraint(equalTo: self.topAnchor),
