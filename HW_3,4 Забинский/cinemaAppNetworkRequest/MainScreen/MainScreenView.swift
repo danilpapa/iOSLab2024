@@ -160,6 +160,12 @@ class MainScreenView: UIView {
         wrongFilmTitleAlert
     }
     
+    func clearSearchBar() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.searchBar.text = nil
+        }
+    }
+    
     private func setup() {
         backgroundColor = Colors.mainGray
         setupLayout()

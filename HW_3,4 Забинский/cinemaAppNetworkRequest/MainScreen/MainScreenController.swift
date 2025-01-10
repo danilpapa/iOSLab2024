@@ -135,6 +135,7 @@ extension MainScreenController: SearchFilmDelegate {
                     filmDetailScreenNavigationController.transitioningDelegate = self
                     filmDetailScreenNavigationController.navigationBar.barTintColor = Colors.mainGray
                     self.present(filmDetailScreenNavigationController, animated: true)
+                    customView.clearSearchBar()
                 }
             }
         } else {

@@ -12,7 +12,7 @@ class FilmRatingView: UIView {
     private lazy var backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = Constants.nothing
+        view.layer.cornerRadius = Constants.ultraTiny
         view.backgroundColor = Colors.ratingBGColor
         return view
     }()
