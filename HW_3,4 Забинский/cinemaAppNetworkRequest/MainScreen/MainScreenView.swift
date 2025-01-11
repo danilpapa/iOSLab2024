@@ -80,9 +80,9 @@ class MainScreenView: UIView {
     
     private lazy var citiesCollectionView: UICollectionView = {
         let collectionViewLayout = UICollectionViewFlowLayout()
-        collectionViewLayout.minimumInteritemSpacing = Constants.tiny / 2
+        collectionViewLayout.minimumInteritemSpacing = Constants.ultraTiny
         collectionViewLayout.scrollDirection = .horizontal
-        collectionViewLayout.itemSize = .init(width: Constants.giant, height: Constants.little)
+        collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.layer.cornerRadius = Constants.tiny / 2
@@ -102,6 +102,7 @@ class MainScreenView: UIView {
         collectionViewLayout.minimumLineSpacing = Constants.tiny
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
+        collectionView.isScrollEnabled = false
         collectionView.layer.cornerRadius = Constants.tiny
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsVerticalScrollIndicator = false
@@ -161,9 +162,15 @@ class MainScreenView: UIView {
     }
     
     func clearSearchBar() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.searchBar.text = nil
         }
+    }
+    
+    func setFilmsCollectionViewHeight(height: CGFloat) {
+        NSLayoutConstraint.activate([
+            filmsCollectionView.heightAnchor.constraint(equalToConstant: height)
+        ])
     }
     
     private func setup() {
@@ -194,7 +201,7 @@ class MainScreenView: UIView {
             
             popularFilmsCollectionView.heightAnchor.constraint(equalToConstant: Constants.screenWidth / 1.5),
             citiesCollectionView.heightAnchor.constraint(equalToConstant: Constants.little),
-            filmsCollectionView.heightAnchor.constraint(equalToConstant: Constants.screenHeight / 2),
+            //filmsCollectionView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
 }
@@ -202,15 +209,22 @@ class MainScreenView: UIView {
 extension MainScreenView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
-        
-        UIView.animate(withDuration: 0.1) {
-            cell?.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        let randomVal = Bool.random() ? 1 : -1
+        let scaleTransform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+        let leftTransition = CGAffineTransform(rotationAngle: .pi / 24 * CGFloat(randomVal))
+        let rightTransition = CGAffineTransform(rotationAngle: .pi / -48 * CGFloat(randomVal))
+            
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveLinear) {
+            cell?.transform = leftTransition.concatenating(scaleTransform)
         } completion: { _ in
-            UIView.animate(withDuration: 0.1) {
-                cell?.transform = .identity
-            } completion: { [weak self] _ in
-                self?.cityHighlightDelegate?.highlightCity(at: indexPath.item)
-                self?.citiesCollectionView.reloadData()
+            UIView.animate(withDuration: 0.1, delay: 0, options: .curveLinear)  {
+                cell?.transform = rightTransition
+            } completion: { _ in
+                self.cityHighlightDelegate?.highlightCity(at: indexPath.item)
+                self.citiesCollectionView.reloadData()
+                UIView.animate(withDuration: 0.05, delay: 0, options: .curveLinear)  {
+                    cell?.transform = .identity
+                } 
             }
         }
     }

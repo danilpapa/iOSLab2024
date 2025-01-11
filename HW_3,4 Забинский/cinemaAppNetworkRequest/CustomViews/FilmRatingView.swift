@@ -28,7 +28,7 @@ class FilmRatingView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .systemOrange
-        label.font = .systemFont(ofSize: Fonts.tiny)
+        label.font = UIFont(name: "Montserrat-Medium", size: Fonts.tiny)
         return label
     }()
     
