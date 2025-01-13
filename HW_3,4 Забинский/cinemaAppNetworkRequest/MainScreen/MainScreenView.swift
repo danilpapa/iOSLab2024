@@ -162,7 +162,6 @@ class MainScreenView: UIView {
     func getFilmsCollectionView() -> UICollectionView { filmsCollectionView }
     func dismissKeyboard() { searchBar.resignFirstResponder() }
     func getWrongTitleAlert() -> UIAlertController { wrongFilmTitleAlert }
-    func getConfirmToScrollCollectionViewAlert() -> UIAlertController { confirmToScrollCollectionViewAlert }
     
     func clearSearchBar() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
