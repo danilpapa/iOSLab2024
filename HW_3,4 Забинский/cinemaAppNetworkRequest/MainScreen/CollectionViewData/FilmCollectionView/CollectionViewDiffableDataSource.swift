@@ -33,7 +33,7 @@ class CollectionViewDiffableDataSource: NSObject {
             
             return cell
         })
-        applyDefaultFilmsSnapshot(with: films)
+        applyDefaultFilmsSnapshot(with: films, shouldCreateSnapshot: true)
     }
     
     func applyPopularFilmsSnapshot(with films: [Film]) {
@@ -45,31 +45,15 @@ class CollectionViewDiffableDataSource: NSObject {
         dataSource?.apply(snapsot, animatingDifferences: false)
     }
     
-    func applyDefaultFilmsSnapshot(with films: [Film]) {
-        var snapsot = NSDiffableDataSourceSnapshot<CollectionViewSections, Film>()
-        
-        snapsot.appendSections([.defaultFilms])
-        snapsot.appendItems(films)
-        
-        dataSource?.apply(snapsot, animatingDifferences: true)
-    }
-    
-    func applyAdditionalFilmsSnapshot(with newFilms: [Film]) {
-        guard var currentSnapshot = dataSource?.snapshot() else { return }
-
-        let currentItems = Set(currentSnapshot.itemIdentifiers)
-        var uniqueNewFilms: [Film] = []
-
-        for film in newFilms {
-            if !currentItems.contains(film) {
-                uniqueNewFilms.append(film)
-            }
+    func applyDefaultFilmsSnapshot(with films: [Film], shouldCreateSnapshot: Bool) {
+        var snapshot: NSDiffableDataSourceSnapshot<CollectionViewSections, Film>!
+        if shouldCreateSnapshot {
+            snapshot = NSDiffableDataSourceSnapshot<CollectionViewSections, Film>()
+            snapshot?.appendSections([.defaultFilms])
+        } else {
+            snapshot = dataSource!.snapshot()
         }
-
-        if !uniqueNewFilms.isEmpty {
-            currentSnapshot.appendItems(uniqueNewFilms, toSection: .defaultFilms)
-
-            dataSource?.apply(currentSnapshot, animatingDifferences: true)
-        }
+        snapshot.appendItems(films)
+        dataSource?.apply(snapshot, animatingDifferences: true)
     }
 }

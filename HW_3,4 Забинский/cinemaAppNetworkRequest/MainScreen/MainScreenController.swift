@@ -111,12 +111,12 @@ extension MainScreenController: CityCollectionViewDelegate {
             dataManager.backToDefaultPage()
             downloadedFilms = originalFilms
             selectedCity = nil
-            filmsCollectionViewDataSource.applyDefaultFilmsSnapshot(with: originalFilms)
+            filmsCollectionViewDataSource.applyDefaultFilmsSnapshot(with: originalFilms, shouldCreateSnapshot: true)
         } else {
             selectedCity = updatedCity
             Task {
                 anothetCititesFilms = await dataManager.obtainFilmsInSelectedCity(updatedCity)
-                filmsCollectionViewDataSource.applyDefaultFilmsSnapshot(with: anothetCititesFilms)
+                filmsCollectionViewDataSource.applyDefaultFilmsSnapshot(with: anothetCititesFilms, shouldCreateSnapshot: true)
                 setCollectionViewHeight()
             }
         }
@@ -125,9 +125,10 @@ extension MainScreenController: CityCollectionViewDelegate {
 
 extension MainScreenController: DidTapOnFilmDelegate {
     func didTapOnFilm(withId id: Int) {
-        feedbackGenerator.impactOccurred()
         Task {
             if let filmWithInfo = await dataManager.getDetailAboutFilm(id) {
+                feedbackGenerator.impactOccurred()
+                
                 let filmDetailScreen = FilmDetailController(withFilm: filmWithInfo)
                 let filmDetailScreenNavigationController = UINavigationController(rootViewController: filmDetailScreen)
                 filmDetailScreenNavigationController.modalPresentationStyle = .custom
@@ -166,9 +167,10 @@ extension MainScreenController: SearchFilmDelegate {
 
 extension MainScreenController: DidTapOnPopularFilmDelegate {
     func didTapOnFilm(film: Film) {
-        feedbackGenerator.impactOccurred()
         Task {
             if let filmWithInfo = await dataManager.getDetailAboutFilm(film.id) {
+                feedbackGenerator.impactOccurred()
+                
                 let filmDetailScreen = FilmDetailController(withFilm: filmWithInfo)
                 let filmDetailScreenNavigationController = UINavigationController(rootViewController: filmDetailScreen)
                 filmDetailScreenNavigationController.modalPresentationStyle = .custom
@@ -213,25 +215,20 @@ extension MainScreenController: UIScrollViewDelegate {
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+            
         if selectedCity == nil {
             let offsetY = scrollView.contentOffset.y
             let contentHeight = scrollView.contentSize.height
             let scrollViewHeight = scrollView.frame.size.height
             
-            if offsetY > contentHeight - scrollViewHeight {
-                let pullDistance = offsetY - (contentHeight - scrollViewHeight)
-                if pullDistance > Constants.huge {
-                    Task {
-                        dataManager.updatePage()
-                        let filmsOnNewPage = await dataManager.obtainFilms()
-                        if !filmsOnNewPage.isEmpty {
-                            feedbackGenerator.impactOccurred()
-                            downloadedFilms += filmsOnNewPage
-                            
-                            filmsCollectionViewDataSource.applyAdditionalFilmsSnapshot(with: filmsOnNewPage)
-                            setCollectionViewHeight()
-                            customView.layoutIfNeeded()
-                        }
+            if offsetY + scrollViewHeight >= contentHeight * 0.75 {
+                Task {
+                    dataManager.updatePage()
+                    let filmsOnNewPage = await dataManager.obtainFilms()
+                    if !filmsOnNewPage.isEmpty {
+                        downloadedFilms += filmsOnNewPage
+                        filmsCollectionViewDataSource.applyDefaultFilmsSnapshot(with: filmsOnNewPage, shouldCreateSnapshot: false)
+                        setCollectionViewHeight()
                     }
                 }
             }

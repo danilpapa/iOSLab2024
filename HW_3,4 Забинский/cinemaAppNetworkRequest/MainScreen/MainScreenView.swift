@@ -42,7 +42,7 @@ class MainScreenView: UIView {
         button.addAction(dismissAction, for: .touchUpInside)
         return button
     }()
-        
+    
     private lazy var mainScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -119,7 +119,7 @@ class MainScreenView: UIView {
         stack.spacing = Constants.tiny
         return stack
     }()
-
+    
     init(cityCollectionViewDelegate cityDelegate: CityCollectionViewDelegate, searchFilmDelegate searchDelegate: SearchFilmDelegate) {
         super.init(frame: .zero)
         self.cityHighlightDelegate = cityDelegate
@@ -152,24 +152,17 @@ class MainScreenView: UIView {
     func setDelegateToFilmsCollecitonView(filmsCollectionViewDelegate: FilmsCollectionViewDelegate) {
         filmsCollectionView.delegate = filmsCollectionViewDelegate
     }
-    
-    func getPopularFilmsCollectionView() -> UICollectionView {
-        popularFilmsCollectionView
-    }
+
     
     func setDataSourceForCityCollectionView(dataSourceForCityCollectionView citiesCollectionViewDataSource: UICollectionViewDataSource) {
         citiesCollectionView.dataSource = citiesCollectionViewDataSource
     }
     
-    func getFilmsCollectionView() -> UICollectionView {
-        filmsCollectionView
-    }
-    
+    func getPopularFilmsCollectionView() -> UICollectionView { popularFilmsCollectionView }
+    func getFilmsCollectionView() -> UICollectionView { filmsCollectionView }
     func dismissKeyboard() { searchBar.resignFirstResponder() }
-    
-    func getWrongTitleAlert() -> UIAlertController {
-        wrongFilmTitleAlert
-    }
+    func getWrongTitleAlert() -> UIAlertController { wrongFilmTitleAlert }
+    func getConfirmToScrollCollectionViewAlert() -> UIAlertController { confirmToScrollCollectionViewAlert }
     
     func clearSearchBar() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

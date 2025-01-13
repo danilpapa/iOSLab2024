@@ -35,7 +35,6 @@ class CoreDataManager {
     }
     
     func createNSFetchedResultController() -> NSFetchedResultsController<FavouriteFilmEntity> {
-        
         let favouriteFilmRequest = FavouriteFilmEntity.fetchRequest()
         favouriteFilmRequest.sortDescriptors = []
         
@@ -168,7 +167,6 @@ class CoreDataManager {
     }
     
     func removeFavouriteFilm(film: FavouriteFilm) {
-        
         let backgroundContext = backgroundContext
         backgroundContext.perform { [weak viewContext] in
             guard let viewContext else { return }
@@ -178,7 +176,6 @@ class CoreDataManager {
             
             do {
                 let favouriteFilmEntities = try backgroundContext.fetch(fetchRequest)
-                
                 if let filmToDelete = favouriteFilmEntities.first {
                     backgroundContext.delete(filmToDelete)
                     
