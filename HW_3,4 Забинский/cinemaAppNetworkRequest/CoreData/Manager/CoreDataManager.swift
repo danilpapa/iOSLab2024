@@ -49,7 +49,6 @@ class CoreDataManager {
     }
     
     func obtainFilms() -> [Film] {
-        
         let filmRequest = FilmEntity.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
         filmRequest.sortDescriptors = [sortDescriptor]

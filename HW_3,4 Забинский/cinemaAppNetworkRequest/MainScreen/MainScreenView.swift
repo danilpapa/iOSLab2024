@@ -51,16 +51,12 @@ class MainScreenView: UIView {
         return scrollView
     }()
     
-    private lazy var searchBar: UISearchBar = {
+    lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.placeholder = "Поиск"
         searchBar.delegate = self
-        searchBar.layer.cornerRadius = Constants.tiny
-        searchBar.clipsToBounds = true
-        searchBar.searchBarStyle = .prominent
-        searchBar.barTintColor = Colors.lighterGray
-        searchBar.searchTextField.textColor = .systemGray6
+        configureSearchBarStyle(searchBar)
         return searchBar
     }()
     
@@ -111,7 +107,7 @@ class MainScreenView: UIView {
         return collectionView
     }()
     
-    private lazy var dataStackView: UIStackView = {
+    lazy var dataStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
             searchBar,
             popularFilmsCollectionView,
@@ -133,6 +129,20 @@ class MainScreenView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setDelegateToMainScrollView(delegate: UIScrollViewDelegate) {
+        mainScrollView.delegate = delegate
+    }
+    
+    func configureSearchBarStyle(_ searchBar: UISearchBar) {
+        searchBar.searchTextField.font = UIFont(name: "Montserrat-Regular", size: Fonts.small)
+        searchBar.layer.cornerRadius = Constants.tiny
+        searchBar.clipsToBounds = true
+        searchBar.searchBarStyle = .prominent
+        searchBar.barTintColor = Colors.lighterGray
+        searchBar.searchTextField.textColor = .systemGray6
+        searchBar.searchTextField.backgroundColor = Colors.lighterGray
     }
     
     func setDelegateToPopularFilmsCollecitonView(popularFilmsCollectionViewDelegate: PopularFilmsDelegate) {
@@ -167,10 +177,13 @@ class MainScreenView: UIView {
         }
     }
     
+    private var filmsCollectionViewHeightConstraint: NSLayoutConstraint?
+    
     func setFilmsCollectionViewHeight(height: CGFloat) {
-        NSLayoutConstraint.activate([
-            filmsCollectionView.heightAnchor.constraint(equalToConstant: height)
-        ])
+        filmsCollectionViewHeightConstraint?.isActive = false
+        
+        filmsCollectionViewHeightConstraint = filmsCollectionView.heightAnchor.constraint(equalToConstant: height)
+        filmsCollectionViewHeightConstraint?.isActive = true
     }
     
     private func setup() {
