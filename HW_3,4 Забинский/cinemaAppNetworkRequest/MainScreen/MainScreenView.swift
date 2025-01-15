@@ -206,7 +206,7 @@ class MainScreenView: UIView {
             
             popularFilmsCollectionView.heightAnchor.constraint(equalToConstant: Constants.screenWidth / 1.5),
             citiesCollectionView.heightAnchor.constraint(equalToConstant: Constants.little),
-            //filmsCollectionView.heightAnchor.constraint(equalToConstant: 200)
+
         ])
     }
 }
